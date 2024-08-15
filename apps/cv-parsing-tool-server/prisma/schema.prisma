@@ -1,0 +1,44 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model ParsedData {
+  address        String?
+  createdAt      DateTime @default(now())
+  education      Json?
+  email          String?
+  id             String   @id @default(cuid())
+  lastName       String?
+  name           String?
+  phoneNumber    String?
+  resume         Resume?  @relation(fields: [resumeId], references: [id])
+  resumeId       String?
+  updatedAt      DateTime @updatedAt
+  workExperience Json?
+}
+
+model Resume {
+  createdAt       DateTime     @default(now())
+  file            Json?
+  id              String       @id @default(cuid())
+  parsedDataItems ParsedData[]
+  resumeId        String?
+  updatedAt       DateTime     @updatedAt
+}
+
+model User {
+  createdAt DateTime @default(now())
+  email     String?  @unique
+  firstName String?
+  id        String   @id @default(cuid())
+  lastName  String?
+  password  String
+  roles     Json
+  updatedAt DateTime @updatedAt
+  username  String   @unique
+}
